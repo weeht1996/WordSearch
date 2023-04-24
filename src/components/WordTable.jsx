@@ -97,40 +97,39 @@ export function WordTable() {
 
     }
 
-    function checkBoundary(word) {
-        
+    function isInBoundary(word) {
+        let increments = getDirection(word.direction)
+        let len = word.word.length - 1
+
+        if ((increments[0] < 0 && (word.spot[0] - len) < 0) ||
+            (increments[0] > 0 && (word.spot[0] + len) > rows - 1) || 
+            (increments[1] > 0 && (word.spot[1] + len) > cols - 1) || 
+            (increments[1] < 0 && (word.spot[1] - len) < 0)) {
+                return false
+            }
+        return true
     }
 
     function checkLocation(word) {
         let count = 0
-        let len = word.word.length - 1
-
-        let row = word.spot[0]
-        let col = word.spot[1]
 
         while (count < 8) {
         //check if available
             let increments = getDirection(word.direction)
 
-            if ((increments[0] < 0 && (row - len) < 0) ||
-            (increments[0] > 0 && (row + len) > rows - 1) || 
-            (increments[1] > 0 && (col + len) > cols - 1) || 
-            (increments[1] < 0 && (col - len) < 0)) {
+            if (!isInBoundary(word)) {
                 word.direction = changeDirection(word.direction)
                 console.log('boundary fail')
             } else {
-                let curr_row = row
-                let curr_col = col
                 for (let x = 0; x < word.word.length; x++) { //under works, for checking if the path is empty
-                    if (board[curr_row][curr_col] !== null) {
+
+                    console.log('word: ' + word.word + ' at letter: ' + word.word.charAt(x) + ' board spot row: ' + word.spot[0] + ' increment row is ' + increments[0] + ' and x: ' + x)
+
+                    if (board[word.spot[0] + x * increments[0]][word.spot[1] + x * increments[1]] !== null) {
                         // if (intersect) {intersectWords([row, col], word.word, word.direction, [curr_row, curr_col], x)}
                         return false
                     }
-                    curr_row += increments[0]
-                    curr_col += increments[1]
                 } //==========================================================================================
-                // placeWord(word.spot[0], word.spot[1], word.word, increments[0], increments[1])
-
                 placeWord(word)
                 return true
             }
@@ -182,7 +181,7 @@ export function WordTable() {
         //if still invalid revert to previous board
     }
 
-    console.log(occupied_spots)
+    // console.log(occupied_spots)
 
     let answer = JSON.parse(JSON.stringify(board))
     for (let j = 0; j < rows; j++) {
