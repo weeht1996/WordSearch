@@ -1,62 +1,48 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import './App.css'
-import { NewTodoForm } from "./components/NewTodoForm"
-import { TodoList } from "./components/TodoList"
 import { WordTable } from "./components/WordTable"
 import { WordsInputForm } from "./components/WordsInputForm"
+import { WordDisplay } from "./components/WordDisplay"
 
-window.intersect = true
 
 export default function App() {
-  const [todos, setTodos] = useState(() =>{
-    const localValue = localStorage.getItem("ITEMS")
-    if (localValue == null) return []
+  const [isGenerated, setIsGenerated] = useState(false)
+  const [words, setWords] = useState("")
+  const [intersect, isIntersect] = useState(false)
+  const [show, setShowAnswer] = useState(true)
+  const [dimension, setDimension] = useState([10,16])
+  const [title, setTitle] = useState('Title')
 
-    return JSON.parse(localValue)
-  })
+  function generateWordSearch(words, intersected, dimension, toggle) {
+    setDimension(dimension)
+    isIntersect(intersected)
+    setShowAnswer(toggle)
+    setIsGenerated(true)
+    setWords(words)
+  }
 
-  useEffect(() => {
-    localStorage.setItem("ITEMS", JSON.stringify(todos))
-  }, [todos])
+  function setAnswerVisibility(isVisible) {
+    setShowAnswer(isVisible)
+  }
 
-  function addTodo(title) {
-    setTodos((currentTodos) => {
-      return [
-        ...currentTodos,
-        {
-          id: crypto.randomUUID(), title, completed:false
-        },
-      ]
-    })
+  function sendTitle(newTitle) {
+    setTitle(newTitle)
   }
   
-  function toggleTodo(id, completed) {
-    setTodos(currentTodos => {
-      return currentTodos.map (todo => {
-        if (todo.id ===id ) {
-          return { ...todo, completed}
-        }
-
-        return todo
-      })
-    })
-  }
-
-  function deleteTodo(id) {
-    setTodos(currentTodos => {
-      return currentTodos.filter(todo => todo.id !== id)
-    })
-  }
-
   return (
     <>
-    <h1>Word Search</h1>
-    <WordTable/>
-    {/* <NewTodoForm onSubmit={addTodo}/> */}
-    <span></span>
+    <div id="content">
+      <h1 id="header">Word Search Generator</h1>
+      <h1 id="title"><u>{title}</u></h1>
+      { isGenerated && <WordTable inputWords = {words} intersect={intersect} dimension={dimension} answerChecked={show}/>}
+      { isGenerated && <WordDisplay words = {words}/>}
+
+    </div>
+    <div id="hide">
+      
     <h2 className='header'>Input words</h2>
-    <WordsInputForm/>
-    {/* <TodoList todos={todos} toggleTodo={toggleTodo} deleteTodo={deleteTodo}/> */}
+    <WordsInputForm onClick={generateWordSearch} setAnswer={setAnswerVisibility} sendTitle={sendTitle} title={title}/>
+    </div>
     </>
   )
 }

@@ -1,6 +1,11 @@
-import { v4 as uuid } from 'uuid';
+import { useState } from "react";
+import { AnswerBoard } from "./AnswerBoard";
+import { WordBoard } from "./WordBoard";
 
-export function WordTable() {
+export function WordTable({inputWords, intersect, dimension, answerChecked}) {
+
+    const [fSize, setFontSize] = useState(16)
+    const [cellWidth, setCellWidth] = useState(fSize * 1.5 + 2)
 
     function generateChar() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -92,14 +97,13 @@ export function WordTable() {
                         let overlap_location = [...current.path[x]]
                         let shift = [ (overlap_location[0] - repeated_word_location[0]),  (overlap_location[1] - repeated_word_location[1]) ]
                         let test_location = [(word.spot[0] + shift[0] ), (word.spot[1] + shift[1])]
-                        if (test_location[0] < 0 || test_location[0] > rows || test_location[1] < 0 || test_location[1] > cols) {
-                            console.log('OOB')
+                        if (word.word, test_location, word.direction) {
+                            // console.log('OOB')
                             return false
                         }
-                        // console.log(word.word + " shift: " + shift + ' and word spot 5: ' + word.spot + ' and new start point: ' + test_location)
                         word.spot = test_location
                         if (isPathClear(word).length > 1) {
-                            console.log('too many collisions')
+                            // console.log('too many collisions')
                             return false
                         }
                         return true
@@ -122,36 +126,37 @@ export function WordTable() {
 
     }
 
-    function isInBoundary(word) {
-        let increments = getDirection(word.direction)
-        let len = word.word.length - 1
-
-        if ((increments[0] < 0 && (word.spot[0] - len) < 0) ||
-            (increments[0] > 0 && (word.spot[0] + len) > rows - 1) || 
-            (increments[1] > 0 && (word.spot[1] + len) > cols - 1) || 
-            (increments[1] < 0 && (word.spot[1] - len) < 0)) {
-                return false
-            }
+    function isInBoundary(word, startPoint, direction) {
+        let increments = getDirection(direction)
+        let len = word.length - 1
+        
+        if ((increments[0] < 0 && (startPoint[0] - len) < 0) ||
+        (increments[0] > 0 && (startPoint[0] + len) > rows - 1) || 
+        (increments[1] > 0 && (startPoint[1] + len) > cols - 1) || 
+        (increments[1] < 0 && (startPoint[1] - len) < 0)) {
+            return false
+        }
         return true
     }
 
     function isPathClear(word) {
         let increments = getDirection(word.direction)
         let collisions = []
-        for (let x = 0; x < word.word.length; x++) { 
+        for (let x = 0; x < word.word.length; x++) {
             if (board[word.spot[0] + x * increments[0]][word.spot[1] + x * increments[1]] !== null) {
                 collisions.push( [word.spot[0] + x * increments[0], word.spot[1] + x * increments[1]] )
             }
         }
         return collisions
     }
+    
+    // ghost tavern scary horror thriller tragedy creepy blood nightmare halloween spooky
+    var rows = dimension[0]
+    var cols = dimension[1]
 
-    let words = ['ghost', 'tavern' , 'scary', 'horror', 'thriller', 'tragedy', 'creepy', 'blood', 'nightmare', 'halloween', 'spooky']
-    var rows = 16
-    var cols = 24
-    
+    let words = inputWords.split(' ')
     words.sort((a,b) => b.length - a.length)
-    
+
     var all_spots = getBoard(rows, cols)
     var board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => null));
     var occupied_spots = [] //for sequence of what's already successfully placed [row, col, index of word in words]
@@ -170,22 +175,15 @@ export function WordTable() {
             path: []
         }
 
-        let valid = false
-
-        while (!valid && current.length > 0) { //check if location is valid
-
+        validityLoop: while ( current.length > 0) { //check if location is valid
             count = 0
             while (count < 8) {
-                if (isInBoundary(word)) {
+                if (isInBoundary(word.word, word.spot, word.direction)) {
+
                     let intersected = isPathClear(word)
-                    if (intersected.length == 0) {
+                    if (intersected.length == 0 || (intersect && intersectWords(word, intersected))) {
                         placeWord(word)
-                        valid = true 
-                        break
-                    } else if ( window.intersect && intersectWords(word, intersected)) {
-                        placeWord(word)
-                        valid = true 
-                        break
+                        break validityLoop
                     }
                 } 
                 word.direction = changeDirection(word.direction)
@@ -205,8 +203,6 @@ export function WordTable() {
         //if still invalid revert to previous board
     }
 
-    console.log(occupied_spots)
-
     let answer = JSON.parse(JSON.stringify(board))
     for (let j = 0; j < rows; j++) {
         for (let k = 0; k < cols; k++) {
@@ -217,26 +213,15 @@ export function WordTable() {
     }
 
     return (
-        <div>
-            {/* <table>
-                <tbody>
-                        {board.map((innerArray) => ( 
-                    <tr key={uuid()}>
-                        {innerArray.map((item) => <td key={uuid()}>{item}</td>)}
-                    </tr>
-                ))}
-                </tbody>
-            </table> */}
-            <span></span>
-            <table>
-                <tbody display="false">
-                        {answer.map((innerArray) => ( 
-                    <tr key={uuid()}>
-                        {innerArray.map((item) => <td key={uuid()}>{item}</td>)}
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className='container d-flex justify-content-center' id="toPrint">
+            <div className="row">
+                <div className="col my-1">
+                    <WordBoard board={board} fSize={fSize} cellWidth={cellWidth}/>
+                </div>
+                {answerChecked && <div className="col my-1" id="answerBoard">
+                    <AnswerBoard answer={answer}/>
+                </div>}
+            </div>
         </div>
     );
 }

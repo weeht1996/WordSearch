@@ -1,17 +1,32 @@
 #root {
-  max-width: 1280px;
+  max-width: 90%;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 10px;
   text-align: center;
 }
 
-table, th, td {
-  border: 1.5px solid white;
-  border-collapse: collapse;
-  table-layout: fixed;
-  width: 24px;
-  height: 24px;
+#toPrint {
+  /* max-height: 29.7cm; */
+  max-width: 21cm;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+table {
+  max-width: 100%;
+  border: 1.5px solid black;
+  table-layout:fixed;
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+ul {
+  margin-top: 20px;
+  list-style-type: none;
+}
+
+
 
 @keyframes logo-spin {
   from {
@@ -26,7 +41,30 @@ table, th, td {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
+  
 }
+
+@media print {
+  
+  #content {
+    top: -200px !important;
+    max-height: 27cm;
+    margin: 0;
+  }
+
+  #hide, #header {
+    display: none;
+  }
+
+  #title, #wordDisplay {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+
+}
+
+
 
 .card {
   padding: 2em;
