@@ -1,6 +1,6 @@
 export function WordBoard({board, fSize, cellWidth}) {
     return (
-        <table >
+        <table>
             <tbody>
                     {board.map((innerArray) => ( 
                 <tr key={crypto.randomUUID()}>

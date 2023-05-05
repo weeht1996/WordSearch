@@ -1,10 +1,10 @@
-export function AnswerBoard({answer}) {
+export function AnswerBoard({answer, fSize, cellWidth}) {
     return (
-        <table className='table-sm'>
+        <table>
             <tbody>
                     {answer.map((innerArray) => ( 
                 <tr key={crypto.randomUUID()}>
-                    {innerArray.map((item) => <td key={crypto.randomUUID()}>{item}</td>)}
+                    {innerArray.map((item) => <td key={crypto.randomUUID()} className="m-1" style={{fontSize: fSize, width: cellWidth}} >{item}</td>)}
                 </tr>
             ))}
             </tbody>

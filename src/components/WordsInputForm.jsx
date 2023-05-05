@@ -20,7 +20,7 @@ export function WordsInputForm({onClick, setAnswer, sendTitle, title}) {
 
     function handleNumberValidation(e) {
         const regex = /^[0-9\b]+$/
-        if (regex.test(e.value) && e.value <= 60 && e.value >= 20) {
+        if (regex.test(e.value) && e.value <= 60 && e.value >= 10) {
              e.id == "rowInput" ? setRow(e.value) : setColumn(e.value)
         }
     }
@@ -35,10 +35,10 @@ export function WordsInputForm({onClick, setAnswer, sendTitle, title}) {
             <div className="container-fluid text-center">
                 <div className="row">
                     <div className="col">
-                        Rows: <input type="number" min={20} max={100} className="form-control bg-dark text-white my-2" name="" id="rowInput" placeholder="10" value={row} onChange={e => handleNumberValidation(e.target)}/>
+                        Rows: <input type="number" min={10} max={100} className="form-control bg-dark text-white my-2" name="" id="rowInput" placeholder="10" value={row} onChange={e => handleNumberValidation(e.target)}/>
                     </div>
                     <div className="col">
-                        Columns: <input type="number" min={20} max={100} className="form-control bg-dark text-white my-2" name="" id="colBtn" placeholder="16" value={column} onChange={e => handleNumberValidation(e.target)}/>
+                        Columns: <input type="number" min={10} max={100} className="form-control bg-dark text-white my-2" name="" id="colBtn" placeholder="16" value={column} onChange={e => handleNumberValidation(e.target)}/>
                     </div>
                 </div>
                 <div className="d-grid gap-2 mb-2">
@@ -67,7 +67,7 @@ export function WordsInputForm({onClick, setAnswer, sendTitle, title}) {
                     <button type="button" className="btn btn-dark" onClick={e => handleClick(e)}>Generate</button>
                 </div>
                 <div>
-                    <button type="button" onClick={() => print()}>Print</button>
+                    <button type="button" className="btn btn-dark mt-2" onClick={() => print()}>Print</button>
                 </div>
             </div>
 

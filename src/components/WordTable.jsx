@@ -1,11 +1,7 @@
-import { useState } from "react";
 import { AnswerBoard } from "./AnswerBoard";
 import { WordBoard } from "./WordBoard";
 
-export function WordTable({inputWords, intersect, dimension, answerChecked}) {
-
-    const [fSize, setFontSize] = useState(16)
-    const [cellWidth, setCellWidth] = useState(fSize * 1.5 + 2)
+export function WordTable({inputWords, intersect, dimension, answerChecked, fSize, cellWidth}) {
 
     function generateChar() {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -83,9 +79,7 @@ export function WordTable({inputWords, intersect, dimension, answerChecked}) {
                 
                 for (let x = 0; x < current.word.length ; x++) {
                     
-                    if (word.word.includes(current.word.charAt(x))) { //finds letters that matches, x is index of letter in intersected word
-                        // console.log(word.word + " intersected at " + intersect_location + ' with starting location of ' + word.spot + ' facing ' + getDirection(word.direction))
-                        //currently avoids duplicate letter overlaps because of indexOf returns 1st found
+                    if (word.word.includes(current.word.charAt(x))) {
                         
                         let repeated_word_idx = word.word.indexOf(current.word.charAt(x))
                         let repeated_word_location = [...word.spot]
@@ -97,15 +91,10 @@ export function WordTable({inputWords, intersect, dimension, answerChecked}) {
                         let overlap_location = [...current.path[x]]
                         let shift = [ (overlap_location[0] - repeated_word_location[0]),  (overlap_location[1] - repeated_word_location[1]) ]
                         let test_location = [(word.spot[0] + shift[0] ), (word.spot[1] + shift[1])]
-                        if (word.word, test_location, word.direction) {
-                            // console.log('OOB')
+                        if (!(isInBoundary(word.word, test_location, word.direction)) || isPathClear(word).length > 1) {
                             return false
                         }
                         word.spot = test_location
-                        if (isPathClear(word).length > 1) {
-                            // console.log('too many collisions')
-                            return false
-                        }
                         return true
                         
                     }
@@ -150,17 +139,14 @@ export function WordTable({inputWords, intersect, dimension, answerChecked}) {
         return collisions
     }
     
-    // ghost tavern scary horror thriller tragedy creepy blood nightmare halloween spooky
+    // ghost tavern scary horror thriller tragedy creepy blood nightmare halloween spooky pillow head decapitate nighttime dark terror curdling scream cream monster version tricky 
     var rows = dimension[0]
     var cols = dimension[1]
 
-    let words = inputWords.split(' ')
-    words.sort((a,b) => b.length - a.length)
-
+    let words = inputWords.split(' ').sort((a,b) => b.length - a.length)
     var all_spots = getBoard(rows, cols)
     var board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => null));
-    var occupied_spots = [] //for sequence of what's already successfully placed [row, col, index of word in words]
-
+    var occupied_spots = []
     var count = 0
 
     for ( let idx in words) {
@@ -216,10 +202,10 @@ export function WordTable({inputWords, intersect, dimension, answerChecked}) {
         <div className='container d-flex justify-content-center' id="toPrint">
             <div className="row">
                 <div className="col my-1">
-                    <WordBoard board={board} fSize={fSize} cellWidth={cellWidth}/>
+                    <WordBoard board={board} fSize={fSize} cellWidth={cellWidth} />
                 </div>
                 {answerChecked && <div className="col my-1" id="answerBoard">
-                    <AnswerBoard answer={answer}/>
+                    <AnswerBoard answer={answer} fSize={fSize} cellWidth={cellWidth}/>
                 </div>}
             </div>
         </div>

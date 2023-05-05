@@ -1,5 +1,5 @@
 #root {
-  max-width: 90%;
+  max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
   padding-top: 10px;
@@ -8,7 +8,7 @@
 
 #toPrint {
   /* max-height: 29.7cm; */
-  max-width: 21cm;
+  /* max-width: 21cm; */
   margin-left: auto;
   margin-right: auto;
 }
@@ -19,6 +19,11 @@ table {
   table-layout:fixed;
   font-family: monospace;
   font-variant-numeric: tabular-nums;
+  
+}
+
+td:empty:after, th:empty:after {
+  content: "\00a0";
 }
 
 ul {
@@ -45,11 +50,13 @@ ul {
 }
 
 @media print {
+
   
   #content {
     top: -200px !important;
     max-height: 27cm;
     margin: 0;
+    max-width: 21cm;
   }
 
   #hide, #header {
