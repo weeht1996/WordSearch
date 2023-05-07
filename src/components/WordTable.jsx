@@ -1,5 +1,6 @@
 import { AnswerBoard } from "./AnswerBoard";
 import { WordBoard } from "./WordBoard";
+import { WordDisplay } from "./WordDisplay";
 
 export function WordTable({inputWords, intersect, dimension, answerChecked, fSize, cellWidth}) {
 
@@ -199,15 +200,19 @@ export function WordTable({inputWords, intersect, dimension, answerChecked, fSiz
     }
 
     return (
-        <div className='container d-flex justify-content-center' id="toPrint">
+        <div className='container' id="toPrint">
             <div className="row">
-                <div className="col my-1">
+                <div className="col-12 d-flex justify-content-center my-1">
                     <WordBoard board={board} fSize={fSize} cellWidth={cellWidth} />
                 </div>
-                {answerChecked && <div className="col my-1" id="answerBoard">
+                <div className="col-10 d-flex justify-content-center" id="wordDisplay">
+                    <WordDisplay words={inputWords}/>
+                </div>
+                {answerChecked && <div className="col-12 d-flex justify-content-center my-1" id="answerBoard">
                     <AnswerBoard answer={answer} fSize={fSize} cellWidth={cellWidth}/>
                 </div>}
             </div>
+
         </div>
     );
 }

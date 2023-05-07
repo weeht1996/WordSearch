@@ -39,8 +39,6 @@ export default function App() {
       <h1 id="header">Word Search Generator</h1>
       <h1 id="title" ><u>{title}</u></h1>
       { isGenerated && <WordTable inputWords = {words} intersect={intersect} dimension={dimension} answerChecked={show} fSize={fSize} cellWidth={cellWidth} />}
-      { isGenerated && <WordDisplay words = {words}/>}
-
     </div>
     <div id="hide">
       

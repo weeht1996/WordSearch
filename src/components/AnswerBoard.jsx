@@ -1,6 +1,6 @@
 export function AnswerBoard({answer, fSize, cellWidth}) {
     return (
-        <table>
+        <table id="answers">
             <tbody>
                     {answer.map((innerArray) => ( 
                 <tr key={crypto.randomUUID()}>

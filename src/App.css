@@ -6,9 +6,7 @@
   text-align: center;
 }
 
-#toPrint {
-  /* max-height: 29.7cm; */
-  /* max-width: 21cm; */
+#toPrint, #wordDisplay {
   margin-left: auto;
   margin-right: auto;
 }
@@ -50,11 +48,14 @@ ul {
 }
 
 @media print {
-
+  body {
+    overflow: visible;
+  }
   
   #content {
     top: -200px !important;
     max-height: 27cm;
+    min-height: 1 page;
     margin: 0;
     max-width: 21cm;
   }
@@ -67,7 +68,6 @@ ul {
     margin-top: 0;
     padding-top: 0;
   }
-
 
 }
 
